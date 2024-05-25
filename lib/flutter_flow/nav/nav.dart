@@ -81,6 +81,10 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               'btStatus',
               ParamType.String,
             ),
+            btMac: params.getParam(
+              'btMac',
+              ParamType.String,
+            ),
           ),
         ),
         FFRoute(

@@ -3,7 +3,9 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/custom_functions.dart' as functions;
+import '/flutter_flow/permissions_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -16,12 +18,14 @@ class HomePageWidget extends StatefulWidget {
     this.name,
     String? time,
     String? btStatus,
+    this.btMac,
   })  : this.time = time ?? '09:40',
         this.btStatus = btStatus ?? 'No disponible / error';
 
   final String? name;
   final String time;
   final String btStatus;
+  final String? btMac;
 
   @override
   State<HomePageWidget> createState() => _HomePageWidgetState();
@@ -36,6 +40,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => HomePageModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      await requestPermission(bluetoothPermission);
+    });
   }
 
   @override
@@ -374,40 +383,30 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       separatorBuilder: (_, __) => SizedBox(height: 4.0),
                       itemBuilder: (context, nombreIndex) {
                         final nombreItem = nombre[nombreIndex];
-                        return Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Align(
-                              alignment: AlignmentDirectional(-1.0, 0.0),
-                              child: Text(
-                                FFAppState().nombresAlarmas[nombreIndex],
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'Readex Pro',
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
-                            ),
-                            Align(
-                              alignment: AlignmentDirectional(-1.0, 0.0),
-                              child: Text(
-                                dateTimeFormat('Hm',
-                                    FFAppState().horasAlarmas[nombreIndex]),
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'Readex Pro',
-                                      letterSpacing: 0.0,
-                                    ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Align(
+                        return Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 4.0, 0.0, 4.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Align(
                                 alignment: AlignmentDirectional(-1.0, 0.0),
                                 child: Text(
-                                  FFAppState().diasAlarmas[nombreIndex],
+                                  FFAppState().nombresAlarmas[nombreIndex],
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'Readex Pro',
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                              ),
+                              Align(
+                                alignment: AlignmentDirectional(-1.0, 0.0),
+                                child: Text(
+                                  dateTimeFormat('Hm',
+                                      FFAppState().horasAlarmas[nombreIndex]),
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
@@ -416,88 +415,110 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                       ),
                                 ),
                               ),
-                            ),
-                            Opacity(
-                              opacity: 0.3,
-                              child: Text(
-                                FFAppState().idAlarmas[nombreIndex].toString(),
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'Readex Pro',
-                                      letterSpacing: 0.0,
-                                    ),
+                              Expanded(
+                                child: Align(
+                                  alignment: AlignmentDirectional(-1.0, 0.0),
+                                  child: Text(
+                                    FFAppState().diasAlarmas[nombreIndex],
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Readex Pro',
+                                          letterSpacing: 0.0,
+                                        ),
+                                  ),
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              child: Align(
+                              Opacity(
+                                opacity: 0.3,
+                                child: Align(
+                                  alignment: AlignmentDirectional(1.0, 0.0),
+                                  child: Text(
+                                    FFAppState()
+                                        .idAlarmas[nombreIndex]
+                                        .toString(),
+                                    textAlign: TextAlign.end,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Readex Pro',
+                                          letterSpacing: 0.0,
+                                        ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Align(
+                                  alignment: AlignmentDirectional(1.0, 0.0),
+                                  child: FlutterFlowIconButton(
+                                    borderRadius: 4.0,
+                                    borderWidth: 2.0,
+                                    buttonSize: 40.0,
+                                    icon: Icon(
+                                      Icons.delete,
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
+                                      size: 24.0,
+                                    ),
+                                    onPressed: () async {
+                                      setState(() {
+                                        FFAppState()
+                                            .removeAtIndexFromNombresAlarmas(
+                                                nombreIndex);
+                                        FFAppState()
+                                            .removeAtIndexFromHorasAlarmas(
+                                                nombreIndex);
+                                        FFAppState()
+                                            .removeAtIndexFromDiasAlarmas(
+                                                nombreIndex);
+                                        FFAppState().removeAtIndexFromIdAlarmas(
+                                            nombreIndex);
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Align(
                                 alignment: AlignmentDirectional(1.0, 0.0),
                                 child: FlutterFlowIconButton(
                                   borderRadius: 4.0,
                                   borderWidth: 2.0,
                                   buttonSize: 40.0,
                                   icon: Icon(
-                                    Icons.delete,
+                                    Icons.edit,
                                     color: FlutterFlowTheme.of(context)
                                         .primaryText,
                                     size: 24.0,
                                   ),
                                   onPressed: () async {
-                                    setState(() {
-                                      FFAppState()
-                                          .removeAtIndexFromNombresAlarmas(
-                                              nombreIndex);
-                                      FFAppState()
-                                          .removeAtIndexFromHorasAlarmas(
-                                              nombreIndex);
-                                      FFAppState().removeAtIndexFromDiasAlarmas(
-                                          nombreIndex);
-                                      FFAppState().removeAtIndexFromIdAlarmas(
-                                          nombreIndex);
-                                    });
+                                    context.pushNamed(
+                                      'editAlarm',
+                                      queryParameters: {
+                                        'alarmName': serializeParam(
+                                          FFAppState()
+                                              .nombresAlarmas[nombreIndex],
+                                          ParamType.String,
+                                        ),
+                                        'alarmTime': serializeParam(
+                                          FFAppState()
+                                              .horasAlarmas[nombreIndex],
+                                          ParamType.DateTime,
+                                        ),
+                                        'alarmDays': serializeParam(
+                                          FFAppState().diasAlarmas[nombreIndex],
+                                          ParamType.String,
+                                        ),
+                                        'alarmId': serializeParam(
+                                          nombreIndex + 1,
+                                          ParamType.int,
+                                        ),
+                                      }.withoutNulls,
+                                    );
                                   },
                                 ),
                               ),
-                            ),
-                            Align(
-                              alignment: AlignmentDirectional(1.0, 0.0),
-                              child: FlutterFlowIconButton(
-                                borderRadius: 4.0,
-                                borderWidth: 2.0,
-                                buttonSize: 40.0,
-                                icon: Icon(
-                                  Icons.edit,
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                  size: 24.0,
-                                ),
-                                onPressed: () async {
-                                  context.pushNamed(
-                                    'editAlarm',
-                                    queryParameters: {
-                                      'alarmName': serializeParam(
-                                        FFAppState()
-                                            .nombresAlarmas[nombreIndex],
-                                        ParamType.String,
-                                      ),
-                                      'alarmTime': serializeParam(
-                                        FFAppState().horasAlarmas[nombreIndex],
-                                        ParamType.DateTime,
-                                      ),
-                                      'alarmDays': serializeParam(
-                                        FFAppState().diasAlarmas[nombreIndex],
-                                        ParamType.String,
-                                      ),
-                                      'alarmId': serializeParam(
-                                        nombreIndex,
-                                        ParamType.int,
-                                      ),
-                                    }.withoutNulls,
-                                  );
-                                },
-                              ),
-                            ),
-                          ].divide(SizedBox(width: 4.0)),
+                            ].divide(SizedBox(width: 4.0)),
+                          ),
                         );
                       },
                     );
