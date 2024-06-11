@@ -1,224 +1,118 @@
-import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'find_devices_model.dart';
-export 'find_devices_model.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+
+BluetoothDevice? connectedDevice;
 
 class FindDevicesWidget extends StatefulWidget {
-  const FindDevicesWidget({super.key});
+  const FindDevicesWidget({Key? key}) : super(key: key);
 
   @override
   State<FindDevicesWidget> createState() => _FindDevicesWidgetState();
 }
 
 class _FindDevicesWidgetState extends State<FindDevicesWidget> {
-  late FindDevicesModel _model;
-
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final FlutterBluePlus flutterBlue = FlutterBluePlus();
+  List<ScanResult> devices = [];
+  BluetoothDevice? connectedDevice;
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => FindDevicesModel());
+    checkPermissions();
   }
 
-  @override
-  void dispose() {
-    _model.dispose();
+  Future<void> checkPermissions() async {
+    final locationStatus = await Permission.location.request();
+    final bluetoothScanStatus = await Permission.bluetoothScan.request();
+    final bluetoothConnectStatus = await Permission.bluetoothConnect.request();
 
-    super.dispose();
+    if (locationStatus.isGranted &&
+        bluetoothScanStatus.isGranted &&
+        bluetoothConnectStatus.isGranted) {
+      print('Todos los permisos concedidos');
+    } else {
+      print('Permisos denegados');
+      openAppSettings();
+    }
+  }
+
+  void startScanning() {
+    try {
+      FlutterBluePlus.startScan(timeout: const Duration(seconds: 5)).catchError((e) {
+        print('Error starting scan: $e');
+      });
+      FlutterBluePlus.scanResults.listen((results) {
+        setState(() {
+          devices = results.where((result) => result.device.remoteId.toString() == "01:23:45:67:A9:8D").toList();
+        });
+        print('Dispositivos encontrados:');
+        for (var device in devices) {
+          print('${device.device.name} (${device.device.remoteId})');
+        }
+      }).onError((error) {
+        print('Error receiving scan results: $error');
+      });
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> connectToDevice(BluetoothDevice device) async {
+    try {
+      await device.connect();
+      setState(() {
+        connectedDevice = device;
+      });
+      connectedDevice = device;
+      print('Conectado a ${device.platformName}');
+    } catch (e) {
+      print('Error al conectar: $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-        appBar: AppBar(
-          backgroundColor: FlutterFlowTheme.of(context).primary,
-          automaticallyImplyLeading: true,
-          title: Align(
-            alignment: AlignmentDirectional(0.0, 0.0),
-            child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 56.0, 0.0),
-              child: Text(
-                'Dispositivos cercanos',
-                style: FlutterFlowTheme.of(context).titleLarge.override(
-                      fontFamily: 'Outfit',
-                      letterSpacing: 0.0,
-                    ),
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Find Devices'),
+      ),
+      body: Column(
+        children: [
+          ElevatedButton(
+            onPressed: startScanning,
+            child: Text('Start Scanning'),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: devices.length,
+              itemBuilder: (context, index) {
+                final device = devices[index];
+                bool isConnected = connectedDevice != null && connectedDevice!.remoteId == device.device.remoteId;
+                return ListTile(
+                  title: Text(device.device.platformName.isNotEmpty
+                      ? device.device.platformName
+                      : 'Unnamed Device'),
+                  subtitle: Text(
+                    isConnected
+                        ? '${device.device.remoteId} (Conectado)'
+                        : device.device.remoteId.toString(),
+                  ),
+                  onTap: () => connectToDevice(device.device),
+                );
+              },
             ),
           ),
-          actions: [],
-          centerTitle: false,
-          elevation: 0.0,
-        ),
-        body: SafeArea(
-          top: true,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 0.0, 16.0),
-                      child: Text(
-                        'Seleccione timbre Bluetooth',
-                        style: FlutterFlowTheme.of(context)
-                            .headlineMedium
-                            .override(
-                              fontFamily: 'Outfit',
-                              letterSpacing: 0.0,
-                            ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 16.0),
-                      child: Text(
-                        'Se actualiza cada 5 segundos...',
-                        style: FlutterFlowTheme.of(context)
-                            .labelMedium
-                            .override(
-                              fontFamily: 'Readex Pro',
-                              color: FlutterFlowTheme.of(context).secondaryText,
-                              letterSpacing: 0.0,
-                            ),
-                      ),
-                    ),
-                    ListView(
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      children: [
-                        ListTile(
-                          leading: FaIcon(
-                            FontAwesomeIcons.bluetooth,
-                            size: 32.0,
-                          ),
-                          title: Text(
-                            'blutup device',
-                            style:
-                                FlutterFlowTheme.of(context).bodyLarge.override(
-                                      fontFamily: 'Readex Pro',
-                                      letterSpacing: 0.0,
-                                    ),
-                          ),
-                          subtitle: Text(
-                            '34:43:f4:34:56',
-                            style: FlutterFlowTheme.of(context)
-                                .labelLarge
-                                .override(
-                                  fontFamily: 'Readex Pro',
-                                  letterSpacing: 0.0,
-                                ),
-                          ),
-                          trailing: Icon(
-                            Icons.arrow_forward_ios,
-                            color: FlutterFlowTheme.of(context).secondaryText,
-                            size: 20.0,
-                          ),
-                          tileColor:
-                              FlutterFlowTheme.of(context).secondaryBackground,
-                          dense: false,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0.0),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color:
-                              FlutterFlowTheme.of(context).secondaryBackground,
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 0.0,
-                              color: FlutterFlowTheme.of(context).alternate,
-                              offset: Offset(
-                                0.0,
-                                1.0,
-                              ),
-                              spreadRadius: 0.0,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
-                child: Text(
-                  'Debug Settings',
-                  style: FlutterFlowTheme.of(context).bodyMedium.override(
-                        fontFamily: 'Readex Pro',
-                        letterSpacing: 0.0,
-                      ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
-                child: FFButtonWidget(
-                  onPressed: () async {
-                    context.goNamed(
-                      'HomePage',
-                      queryParameters: {
-                        'btStatus': serializeParam(
-                          'Conectado',
-                          ParamType.String,
-                        ),
-                      }.withoutNulls,
-                    );
-                  },
-                  text: 'Connect',
-                  icon: Icon(
-                    Icons.link,
-                    size: 20.0,
-                  ),
-                  options: FFButtonOptions(
-                    height: 40.0,
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                    iconPadding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                    color: FlutterFlowTheme.of(context).primary,
-                    textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                          fontFamily: 'Readex Pro',
-                          color: Colors.white,
-                          letterSpacing: 0.0,
-                        ),
-                    elevation: 3.0,
-                    borderSide: BorderSide(
-                      color: Colors.transparent,
-                      width: 1.0,
-                    ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+        ],
       ),
     );
   }
+}
+
+
+void main() {
+  runApp(MaterialApp(
+    home: FindDevicesWidget(),
+  ));
 }

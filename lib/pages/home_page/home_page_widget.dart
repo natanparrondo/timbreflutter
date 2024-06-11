@@ -7,20 +7,21 @@ import '/flutter_flow/permissions_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'home_page_model.dart';
 export 'home_page_model.dart';
+import '../find_devices/find_devices_widget.dart'; 
 
 class HomePageWidget extends StatefulWidget {
   const HomePageWidget({
-    super.key,
+    Key? key,
     this.name,
     String? time,
     String? btStatus,
     this.btMac,
-  })  : this.time = time ?? '09:40',
-        this.btStatus = btStatus ?? 'No disponible / error';
+  })  : time = time ?? '09:40',
+        btStatus = btStatus ?? 'No disponible / error',
+        super(key: key);
 
   final String? name;
   final String time;
@@ -35,6 +36,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   late HomePageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  String btStatus = 'No disponible / error';
 
   @override
   void initState() {
@@ -44,18 +46,33 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       await requestPermission(bluetoothPermission);
+      updateStatus();  
     });
   }
 
   @override
   void dispose() {
     _model.dispose();
-
     super.dispose();
   }
 
+  void updateStatus() {
+    print('connectedDevice: $connectedDevice');
+    // Actualiza el estado según el valor de la variable global connectedDevice
+    setState(() {
+      if (connectedDevice != null) {
+        btStatus = 'Conectado ${connectedDevice!.platformName}';
+      } else {
+        btStatus = 'No disponible / error';
+      }
+    });
+    print('btStatus: $btStatus');
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    updateStatus();
     context.watch<FFAppState>();
 
     return GestureDetector(
@@ -105,9 +122,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           backgroundColor: FlutterFlowTheme.of(context).primary,
           automaticallyImplyLeading: false,
           title: Align(
-            alignment: AlignmentDirectional(0.0, 0.0),
+            alignment: const AlignmentDirectional(0.0, 0.0),
             child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(56.0, 0.0, 0.0, 0.0),
+              padding: const EdgeInsetsDirectional.fromSTEB(56.0, 0.0, 0.0, 0.0),
               child: Text(
                 'Timbre',
                 style: FlutterFlowTheme.of(context).headlineMedium.override(
@@ -121,14 +138,14 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           ),
           actions: [
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 16.0, 0.0),
+              padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 16.0, 0.0),
               child: FlutterFlowIconButton(
                 borderColor: FlutterFlowTheme.of(context).primary,
                 borderRadius: 20.0,
                 borderWidth: 1.0,
                 buttonSize: 40.0,
                 fillColor: FlutterFlowTheme.of(context).accent1,
-                icon: Icon(
+                icon: const Icon(
                   Icons.info_outline,
                   color: Colors.white,
                   size: 24.0,
@@ -145,18 +162,18 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         body: SafeArea(
           top: true,
           child: Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Padding(
                         padding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                            const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
                         child: Icon(
                           Icons.bluetooth_audio,
                           color: FlutterFlowTheme.of(context).primaryText,
@@ -181,7 +198,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       ),
                       Flexible(
                         child: Align(
-                          alignment: AlignmentDirectional(1.0, 0.0),
+                          alignment: const AlignmentDirectional(1.0, 0.0),
                           child: FlutterFlowIconButton(
                             borderRadius: 4.0,
                             borderWidth: 2.0,
@@ -201,7 +218,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
@@ -217,7 +234,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                         .primaryText,
                                   ),
                                 ),
-                                duration: Duration(milliseconds: 4000),
+                                duration: const Duration(milliseconds: 4000),
                                 backgroundColor:
                                     FlutterFlowTheme.of(context).secondary,
                               ),
@@ -225,15 +242,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             HapticFeedback.lightImpact();
                           },
                           text: 'Ring',
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.notifications_active_sharp,
                             size: 15.0,
                           ),
                           options: FFButtonOptions(
                             height: 40.0,
-                            padding: EdgeInsetsDirectional.fromSTEB(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
                                 24.0, 0.0, 24.0, 0.0),
-                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                            iconPadding: const EdgeInsetsDirectional.fromSTEB(
                                 0.0, 0.0, 0.0, 0.0),
                             color: FlutterFlowTheme.of(context).primary,
                             textStyle: FlutterFlowTheme.of(context)
@@ -244,7 +261,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   letterSpacing: 0.0,
                                 ),
                             elevation: 3.0,
-                            borderSide: BorderSide(
+                            borderSide: const BorderSide(
                               color: Colors.transparent,
                               width: 1.0,
                             ),
@@ -264,7 +281,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                         .primaryText,
                                   ),
                                 ),
-                                duration: Duration(milliseconds: 4000),
+                                duration: const Duration(milliseconds: 4000),
                                 backgroundColor:
                                     FlutterFlowTheme.of(context).secondary,
                               ),
@@ -272,15 +289,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             HapticFeedback.lightImpact();
                           },
                           text: 'Send',
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.send_rounded,
                             size: 15.0,
                           ),
                           options: FFButtonOptions(
                             height: 40.0,
-                            padding: EdgeInsetsDirectional.fromSTEB(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
                                 24.0, 0.0, 24.0, 0.0),
-                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                            iconPadding: const EdgeInsetsDirectional.fromSTEB(
                                 0.0, 0.0, 0.0, 0.0),
                             color: FlutterFlowTheme.of(context).secondary,
                             textStyle: FlutterFlowTheme.of(context)
@@ -291,7 +308,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   letterSpacing: 0.0,
                                 ),
                             elevation: 3.0,
-                            borderSide: BorderSide(
+                            borderSide: const BorderSide(
                               color: Colors.transparent,
                               width: 1.0,
                             ),
@@ -306,19 +323,19 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   context: context,
                                   builder: (alertDialogContext) {
                                     return AlertDialog(
-                                      title: Text('Reset'),
-                                      content: Text(
+                                      title: const Text('Reset'),
+                                      content: const Text(
                                           'Resetear dispositivo vinculado?'),
                                       actions: [
                                         TextButton(
                                           onPressed: () => Navigator.pop(
                                               alertDialogContext, false),
-                                          child: Text('Cancelar'),
+                                          child: const Text('Cancelar'),
                                         ),
                                         TextButton(
                                           onPressed: () => Navigator.pop(
                                               alertDialogContext, true),
-                                          child: Text('Confirmar'),
+                                          child: const Text('Confirmar'),
                                         ),
                                       ],
                                     );
@@ -335,22 +352,22 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                         .primaryText,
                                   ),
                                 ),
-                                duration: Duration(milliseconds: 4000),
+                                duration: const Duration(milliseconds: 4000),
                                 backgroundColor:
                                     FlutterFlowTheme.of(context).error,
                               ),
                             );
                           },
                           text: 'Reset',
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.restart_alt,
                             size: 15.0,
                           ),
                           options: FFButtonOptions(
                             height: 40.0,
-                            padding: EdgeInsetsDirectional.fromSTEB(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
                                 24.0, 0.0, 24.0, 0.0),
-                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                            iconPadding: const EdgeInsetsDirectional.fromSTEB(
                                 0.0, 0.0, 0.0, 0.0),
                             color: FlutterFlowTheme.of(context).error,
                             textStyle: FlutterFlowTheme.of(context)
@@ -361,7 +378,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   letterSpacing: 0.0,
                                 ),
                             elevation: 3.0,
-                            borderSide: BorderSide(
+                            borderSide: const BorderSide(
                               color: Colors.transparent,
                               width: 1.0,
                             ),
@@ -369,7 +386,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           ),
                         ),
                       ),
-                    ].divide(SizedBox(width: 4.0)),
+                    ].divide(const SizedBox(width: 4.0)),
                   ),
                 ),
                 Builder(
@@ -380,17 +397,17 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
                       itemCount: nombre.length,
-                      separatorBuilder: (_, __) => SizedBox(height: 4.0),
+                      separatorBuilder: (_, __) => const SizedBox(height: 4.0),
                       itemBuilder: (context, nombreIndex) {
                         final nombreItem = nombre[nombreIndex];
                         return Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
                               0.0, 4.0, 0.0, 4.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Align(
-                                alignment: AlignmentDirectional(-1.0, 0.0),
+                                alignment: const AlignmentDirectional(-1.0, 0.0),
                                 child: Text(
                                   FFAppState().nombresAlarmas[nombreIndex],
                                   style: FlutterFlowTheme.of(context)
@@ -403,7 +420,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 ),
                               ),
                               Align(
-                                alignment: AlignmentDirectional(-1.0, 0.0),
+                                alignment: const AlignmentDirectional(-1.0, 0.0),
                                 child: Text(
                                   dateTimeFormat('Hm',
                                       FFAppState().horasAlarmas[nombreIndex]),
@@ -417,7 +434,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               ),
                               Expanded(
                                 child: Align(
-                                  alignment: AlignmentDirectional(-1.0, 0.0),
+                                  alignment: const AlignmentDirectional(-1.0, 0.0),
                                   child: Text(
                                     FFAppState().diasAlarmas[nombreIndex],
                                     style: FlutterFlowTheme.of(context)
@@ -432,7 +449,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               Opacity(
                                 opacity: 0.3,
                                 child: Align(
-                                  alignment: AlignmentDirectional(1.0, 0.0),
+                                  alignment: const AlignmentDirectional(1.0, 0.0),
                                   child: Text(
                                     FFAppState()
                                         .idAlarmas[nombreIndex]
@@ -449,7 +466,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               ),
                               Expanded(
                                 child: Align(
-                                  alignment: AlignmentDirectional(1.0, 0.0),
+                                  alignment: const AlignmentDirectional(1.0, 0.0),
                                   child: FlutterFlowIconButton(
                                     borderRadius: 4.0,
                                     borderWidth: 2.0,
@@ -479,7 +496,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 ),
                               ),
                               Align(
-                                alignment: AlignmentDirectional(1.0, 0.0),
+                                alignment: const AlignmentDirectional(1.0, 0.0),
                                 child: FlutterFlowIconButton(
                                   borderRadius: 4.0,
                                   borderWidth: 2.0,
@@ -517,7 +534,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   },
                                 ),
                               ),
-                            ].divide(SizedBox(width: 4.0)),
+                            ].divide(const SizedBox(width: 4.0)),
                           ),
                         );
                       },

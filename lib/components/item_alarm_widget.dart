@@ -2,8 +2,6 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'item_alarm_model.dart';
 export 'item_alarm_model.dart';
 
@@ -13,7 +11,7 @@ class ItemAlarmWidget extends StatefulWidget {
     this.name,
     this.time,
     String? days,
-  }) : this.days = days ?? 'LMXJV';
+  }) : days = days ?? 'LMXJV';
 
   final String? name;
   final DateTime? time;
@@ -51,7 +49,7 @@ class _ItemAlarmWidgetState extends State<ItemAlarmWidget> {
       mainAxisSize: MainAxisSize.max,
       children: [
         Align(
-          alignment: AlignmentDirectional(-1.0, 0.0),
+          alignment: const AlignmentDirectional(-1.0, 0.0),
           child: Text(
             widget.name!,
             style: FlutterFlowTheme.of(context).bodyMedium.override(
@@ -62,7 +60,7 @@ class _ItemAlarmWidgetState extends State<ItemAlarmWidget> {
           ),
         ),
         Align(
-          alignment: AlignmentDirectional(-1.0, 0.0),
+          alignment: const AlignmentDirectional(-1.0, 0.0),
           child: Text(
             valueOrDefault<String>(
               widget.time?.toString(),
@@ -76,7 +74,7 @@ class _ItemAlarmWidgetState extends State<ItemAlarmWidget> {
         ),
         Expanded(
           child: Align(
-            alignment: AlignmentDirectional(-1.0, 0.0),
+            alignment: const AlignmentDirectional(-1.0, 0.0),
             child: Text(
               widget.days,
               style: FlutterFlowTheme.of(context).bodyMedium.override(
@@ -120,7 +118,7 @@ class _ItemAlarmWidgetState extends State<ItemAlarmWidget> {
             );
           },
         ),
-      ].divide(SizedBox(width: 8.0)),
+      ].divide(const SizedBox(width: 8.0)),
     );
   }
 }

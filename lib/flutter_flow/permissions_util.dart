@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 const kPermissionStateToBool = {
@@ -9,7 +8,7 @@ const kPermissionStateToBool = {
   PermissionStatus.permanentlyDenied: false,
 };
 
-final bluetoothPermission = Permission.bluetooth;
+const bluetoothPermission = Permission.bluetooth;
 
 Future<bool> getPermissionStatus(Permission setting) async {
   final status = await setting.status;

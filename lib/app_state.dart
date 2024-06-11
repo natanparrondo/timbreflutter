@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import '/backend/schema/structs/index.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'flutter_flow/flutter_flow_util.dart';
 
 class FFAppState extends ChangeNotifier {
   static FFAppState _instance = FFAppState._internal();
@@ -48,36 +46,36 @@ class FFAppState extends ChangeNotifier {
 
   List<String> _nombresAlarmas = ['Alarma Semana', 'Alarma Finde'];
   List<String> get nombresAlarmas => _nombresAlarmas;
-  set nombresAlarmas(List<String> _value) {
-    _nombresAlarmas = _value;
-    prefs.setStringList('ff_nombresAlarmas', _value);
+  set nombresAlarmas(List<String> value) {
+    _nombresAlarmas = value;
+    prefs.setStringList('ff_nombresAlarmas', value);
   }
 
-  void addToNombresAlarmas(String _value) {
-    _nombresAlarmas.add(_value);
+  void addToNombresAlarmas(String value) {
+    _nombresAlarmas.add(value);
     prefs.setStringList('ff_nombresAlarmas', _nombresAlarmas);
   }
 
-  void removeFromNombresAlarmas(String _value) {
-    _nombresAlarmas.remove(_value);
+  void removeFromNombresAlarmas(String value) {
+    _nombresAlarmas.remove(value);
     prefs.setStringList('ff_nombresAlarmas', _nombresAlarmas);
   }
 
-  void removeAtIndexFromNombresAlarmas(int _index) {
-    _nombresAlarmas.removeAt(_index);
+  void removeAtIndexFromNombresAlarmas(int index) {
+    _nombresAlarmas.removeAt(index);
     prefs.setStringList('ff_nombresAlarmas', _nombresAlarmas);
   }
 
   void updateNombresAlarmasAtIndex(
-    int _index,
+    int index,
     String Function(String) updateFn,
   ) {
-    _nombresAlarmas[_index] = updateFn(_nombresAlarmas[_index]);
+    _nombresAlarmas[index] = updateFn(_nombresAlarmas[index]);
     prefs.setStringList('ff_nombresAlarmas', _nombresAlarmas);
   }
 
-  void insertAtIndexInNombresAlarmas(int _index, String _value) {
-    _nombresAlarmas.insert(_index, _value);
+  void insertAtIndexInNombresAlarmas(int index, String value) {
+    _nombresAlarmas.insert(index, value);
     prefs.setStringList('ff_nombresAlarmas', _nombresAlarmas);
   }
 
@@ -86,117 +84,117 @@ class FFAppState extends ChangeNotifier {
     DateTime.fromMillisecondsSinceEpoch(1716423300000)
   ];
   List<DateTime> get horasAlarmas => _horasAlarmas;
-  set horasAlarmas(List<DateTime> _value) {
-    _horasAlarmas = _value;
+  set horasAlarmas(List<DateTime> value) {
+    _horasAlarmas = value;
     prefs.setStringList('ff_horasAlarmas',
-        _value.map((x) => x.millisecondsSinceEpoch.toString()).toList());
+        value.map((x) => x.millisecondsSinceEpoch.toString()).toList());
   }
 
-  void addToHorasAlarmas(DateTime _value) {
-    _horasAlarmas.add(_value);
-    prefs.setStringList('ff_horasAlarmas',
-        _horasAlarmas.map((x) => x.millisecondsSinceEpoch.toString()).toList());
-  }
-
-  void removeFromHorasAlarmas(DateTime _value) {
-    _horasAlarmas.remove(_value);
+  void addToHorasAlarmas(DateTime value) {
+    _horasAlarmas.add(value);
     prefs.setStringList('ff_horasAlarmas',
         _horasAlarmas.map((x) => x.millisecondsSinceEpoch.toString()).toList());
   }
 
-  void removeAtIndexFromHorasAlarmas(int _index) {
-    _horasAlarmas.removeAt(_index);
+  void removeFromHorasAlarmas(DateTime value) {
+    _horasAlarmas.remove(value);
+    prefs.setStringList('ff_horasAlarmas',
+        _horasAlarmas.map((x) => x.millisecondsSinceEpoch.toString()).toList());
+  }
+
+  void removeAtIndexFromHorasAlarmas(int index) {
+    _horasAlarmas.removeAt(index);
     prefs.setStringList('ff_horasAlarmas',
         _horasAlarmas.map((x) => x.millisecondsSinceEpoch.toString()).toList());
   }
 
   void updateHorasAlarmasAtIndex(
-    int _index,
+    int index,
     DateTime Function(DateTime) updateFn,
   ) {
-    _horasAlarmas[_index] = updateFn(_horasAlarmas[_index]);
+    _horasAlarmas[index] = updateFn(_horasAlarmas[index]);
     prefs.setStringList('ff_horasAlarmas',
         _horasAlarmas.map((x) => x.millisecondsSinceEpoch.toString()).toList());
   }
 
-  void insertAtIndexInHorasAlarmas(int _index, DateTime _value) {
-    _horasAlarmas.insert(_index, _value);
+  void insertAtIndexInHorasAlarmas(int index, DateTime value) {
+    _horasAlarmas.insert(index, value);
     prefs.setStringList('ff_horasAlarmas',
         _horasAlarmas.map((x) => x.millisecondsSinceEpoch.toString()).toList());
   }
 
   List<String> _diasAlarmas = ['LMXJV--', '-----SD'];
   List<String> get diasAlarmas => _diasAlarmas;
-  set diasAlarmas(List<String> _value) {
-    _diasAlarmas = _value;
-    prefs.setStringList('ff_diasAlarmas', _value);
+  set diasAlarmas(List<String> value) {
+    _diasAlarmas = value;
+    prefs.setStringList('ff_diasAlarmas', value);
   }
 
-  void addToDiasAlarmas(String _value) {
-    _diasAlarmas.add(_value);
+  void addToDiasAlarmas(String value) {
+    _diasAlarmas.add(value);
     prefs.setStringList('ff_diasAlarmas', _diasAlarmas);
   }
 
-  void removeFromDiasAlarmas(String _value) {
-    _diasAlarmas.remove(_value);
+  void removeFromDiasAlarmas(String value) {
+    _diasAlarmas.remove(value);
     prefs.setStringList('ff_diasAlarmas', _diasAlarmas);
   }
 
-  void removeAtIndexFromDiasAlarmas(int _index) {
-    _diasAlarmas.removeAt(_index);
+  void removeAtIndexFromDiasAlarmas(int index) {
+    _diasAlarmas.removeAt(index);
     prefs.setStringList('ff_diasAlarmas', _diasAlarmas);
   }
 
   void updateDiasAlarmasAtIndex(
-    int _index,
+    int index,
     String Function(String) updateFn,
   ) {
-    _diasAlarmas[_index] = updateFn(_diasAlarmas[_index]);
+    _diasAlarmas[index] = updateFn(_diasAlarmas[index]);
     prefs.setStringList('ff_diasAlarmas', _diasAlarmas);
   }
 
-  void insertAtIndexInDiasAlarmas(int _index, String _value) {
-    _diasAlarmas.insert(_index, _value);
+  void insertAtIndexInDiasAlarmas(int index, String value) {
+    _diasAlarmas.insert(index, value);
     prefs.setStringList('ff_diasAlarmas', _diasAlarmas);
   }
 
   List<int> _idAlarmas = [1, 2];
   List<int> get idAlarmas => _idAlarmas;
-  set idAlarmas(List<int> _value) {
-    _idAlarmas = _value;
+  set idAlarmas(List<int> value) {
+    _idAlarmas = value;
     prefs.setStringList(
-        'ff_idAlarmas', _value.map((x) => x.toString()).toList());
+        'ff_idAlarmas', value.map((x) => x.toString()).toList());
   }
 
-  void addToIdAlarmas(int _value) {
-    _idAlarmas.add(_value);
-    prefs.setStringList(
-        'ff_idAlarmas', _idAlarmas.map((x) => x.toString()).toList());
-  }
-
-  void removeFromIdAlarmas(int _value) {
-    _idAlarmas.remove(_value);
+  void addToIdAlarmas(int value) {
+    _idAlarmas.add(value);
     prefs.setStringList(
         'ff_idAlarmas', _idAlarmas.map((x) => x.toString()).toList());
   }
 
-  void removeAtIndexFromIdAlarmas(int _index) {
-    _idAlarmas.removeAt(_index);
+  void removeFromIdAlarmas(int value) {
+    _idAlarmas.remove(value);
+    prefs.setStringList(
+        'ff_idAlarmas', _idAlarmas.map((x) => x.toString()).toList());
+  }
+
+  void removeAtIndexFromIdAlarmas(int index) {
+    _idAlarmas.removeAt(index);
     prefs.setStringList(
         'ff_idAlarmas', _idAlarmas.map((x) => x.toString()).toList());
   }
 
   void updateIdAlarmasAtIndex(
-    int _index,
+    int index,
     int Function(int) updateFn,
   ) {
-    _idAlarmas[_index] = updateFn(_idAlarmas[_index]);
+    _idAlarmas[index] = updateFn(_idAlarmas[index]);
     prefs.setStringList(
         'ff_idAlarmas', _idAlarmas.map((x) => x.toString()).toList());
   }
 
-  void insertAtIndexInIdAlarmas(int _index, int _value) {
-    _idAlarmas.insert(_index, _value);
+  void insertAtIndexInIdAlarmas(int index, int value) {
+    _idAlarmas.insert(index, value);
     prefs.setStringList(
         'ff_idAlarmas', _idAlarmas.map((x) => x.toString()).toList());
   }

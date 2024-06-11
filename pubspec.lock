@@ -105,6 +105,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.18.0"
+  convert:
+    dependency: transitive
+    description:
+      name: convert
+      sha256: "0f08b14755d163f6e2134cb58222dd25ea2a2ee8a195e53983d57c075324d592"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.1"
   crypto:
     dependency: transitive
     description:
@@ -174,6 +182,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.1+1"
+  flutter_blue:
+    dependency: "direct main"
+    description:
+      name: flutter_blue
+      sha256: f7f76b9b80455b0375693ec96c276fadb01e94d8441fa1740a64980cd1aeda5c
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.8.0"
+  flutter_blue_plus:
+    dependency: "direct main"
+    description:
+      name: flutter_blue_plus
+      sha256: c762a694c2f67b1f492ef19ead2a30ed3254650bafd852cb8933823d13d7c89f
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.32.7"
   flutter_cache_manager:
     dependency: "direct main"
     description:
@@ -209,7 +233,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_web_plugins:
-    dependency: transitive
+    dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -525,6 +549,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
+  protobuf:
+    dependency: transitive
+    description:
+      name: protobuf
+      sha256: "01dd9bd0fa02548bf2ceee13545d4a0ec6046459d847b6b061d8a27237108a08"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   provider:
     dependency: "direct main"
     description:
@@ -545,10 +577,10 @@ packages:
     dependency: transitive
     description:
       name: rxdart
-      sha256: "0c7c0cedd93788d996e33041ffecda924cc54389199cde4e6a34b440f50044cb"
+      sha256: "2ef8b4e91cb3b55d155e0e34eeae0ac7107974e451495c955ac04ddee8cc21fd"
       url: "https://pub.dev"
     source: hosted
-    version: "0.27.7"
+    version: "0.26.0"
   shared_preferences:
     dependency: "direct main"
     description:

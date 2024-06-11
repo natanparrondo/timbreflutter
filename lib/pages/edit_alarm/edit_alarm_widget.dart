@@ -2,11 +2,8 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:easy_debounce/easy_debounce.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'edit_alarm_model.dart';
 export 'edit_alarm_model.dart';
 
@@ -18,8 +15,8 @@ class EditAlarmWidget extends StatefulWidget {
     String? alarmDays,
     required this.alarmId,
     bool? isNew,
-  })  : this.alarmDays = alarmDays ?? '',
-        this.isNew = isNew ?? false;
+  })  : alarmDays = alarmDays ?? '',
+        isNew = isNew ?? false;
 
   final String? alarmName;
   final DateTime? alarmTime;
@@ -65,7 +62,7 @@ class _EditAlarmWidgetState extends State<EditAlarmWidget> {
           backgroundColor: FlutterFlowTheme.of(context).primary,
           automaticallyImplyLeading: false,
           title: Align(
-            alignment: AlignmentDirectional(0.0, 0.0),
+            alignment: const AlignmentDirectional(0.0, 0.0),
             child: Text(
               'Editar alarma',
               style: FlutterFlowTheme.of(context).headlineMedium.override(
@@ -76,14 +73,14 @@ class _EditAlarmWidgetState extends State<EditAlarmWidget> {
                   ),
             ),
           ),
-          actions: [],
+          actions: const [],
           centerTitle: false,
           elevation: 2.0,
         ),
         body: SafeArea(
           top: true,
           child: Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.max,
@@ -93,7 +90,7 @@ class _EditAlarmWidgetState extends State<EditAlarmWidget> {
                     focusNode: _model.textFieldFocusNode,
                     onChanged: (_) => EasyDebounce.debounce(
                       '_model.textController',
-                      Duration(milliseconds: 2000),
+                      const Duration(milliseconds: 2000),
                       () => setState(() {}),
                     ),
                     autofocus: true,
@@ -144,7 +141,7 @@ class _EditAlarmWidgetState extends State<EditAlarmWidget> {
                                 _model.textController?.clear();
                                 setState(() {});
                               },
-                              child: Icon(
+                              child: const Icon(
                                 Icons.clear,
                                 size: 22,
                               ),
@@ -166,10 +163,10 @@ class _EditAlarmWidgetState extends State<EditAlarmWidget> {
                         _model.textControllerValidator.asValidator(context),
                   ),
                   Align(
-                    alignment: AlignmentDirectional(-1.0, 0.0),
+                    alignment: const AlignmentDirectional(-1.0, 0.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        final _datePickedTime = await showTimePicker(
+                        final datePickedTime = await showTimePicker(
                           context: context,
                           initialTime: TimeOfDay.fromDateTime(
                               (widget.alarmTime ?? DateTime.now())),
@@ -204,14 +201,14 @@ class _EditAlarmWidgetState extends State<EditAlarmWidget> {
                             );
                           },
                         );
-                        if (_datePickedTime != null) {
+                        if (datePickedTime != null) {
                           safeSetState(() {
                             _model.datePicked = DateTime(
                               (widget.alarmTime ?? DateTime.now()).year,
                               (widget.alarmTime ?? DateTime.now()).month,
                               (widget.alarmTime ?? DateTime.now()).day,
-                              _datePickedTime.hour,
-                              _datePickedTime.minute,
+                              datePickedTime.hour,
+                              datePickedTime.minute,
                             );
                           });
                         }
@@ -228,10 +225,10 @@ class _EditAlarmWidgetState extends State<EditAlarmWidget> {
                       options: FFButtonOptions(
                         width: double.infinity,
                         height: 40.0,
-                        padding: EdgeInsetsDirectional.fromSTEB(
+                        padding: const EdgeInsetsDirectional.fromSTEB(
                             24.0, 0.0, 24.0, 0.0),
                         iconPadding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                            const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                         color: FlutterFlowTheme.of(context).primaryBackground,
                         textStyle:
                             FlutterFlowTheme.of(context).bodyMedium.override(
@@ -271,7 +268,7 @@ class _EditAlarmWidgetState extends State<EditAlarmWidget> {
                           return var1.contains('L');
                         }(widget.alarmDays),
                         onChanged: (newValue) async {
-                          setState(() => _model.lunesSwitchValue = newValue!);
+                          setState(() => _model.lunesSwitchValue = newValue);
                         },
                         title: Text(
                           'Lunes',
@@ -295,7 +292,7 @@ class _EditAlarmWidgetState extends State<EditAlarmWidget> {
                           return var1.contains('M');
                         }(widget.alarmDays),
                         onChanged: (newValue) async {
-                          setState(() => _model.martesSwitchValue = newValue!);
+                          setState(() => _model.martesSwitchValue = newValue);
                         },
                         title: Text(
                           'Martes',
@@ -320,7 +317,7 @@ class _EditAlarmWidgetState extends State<EditAlarmWidget> {
                         }(widget.alarmDays),
                         onChanged: (newValue) async {
                           setState(
-                              () => _model.miercolesSwitchValue = newValue!);
+                              () => _model.miercolesSwitchValue = newValue);
                         },
                         title: Text(
                           'Miércoles',
@@ -344,7 +341,7 @@ class _EditAlarmWidgetState extends State<EditAlarmWidget> {
                           return var1.contains('J');
                         }(widget.alarmDays),
                         onChanged: (newValue) async {
-                          setState(() => _model.juevesSwitchValue = newValue!);
+                          setState(() => _model.juevesSwitchValue = newValue);
                         },
                         title: Text(
                           'Jueves',
@@ -368,7 +365,7 @@ class _EditAlarmWidgetState extends State<EditAlarmWidget> {
                           return var1.contains('V');
                         }(widget.alarmDays),
                         onChanged: (newValue) async {
-                          setState(() => _model.viernesSwitchValue = newValue!);
+                          setState(() => _model.viernesSwitchValue = newValue);
                         },
                         title: Text(
                           'Viernes',
@@ -392,7 +389,7 @@ class _EditAlarmWidgetState extends State<EditAlarmWidget> {
                           return var1.contains('S');
                         }(widget.alarmDays),
                         onChanged: (newValue) async {
-                          setState(() => _model.sabadoSwitchValue = newValue!);
+                          setState(() => _model.sabadoSwitchValue = newValue);
                         },
                         title: Text(
                           'Sabado de flojera',
@@ -416,7 +413,7 @@ class _EditAlarmWidgetState extends State<EditAlarmWidget> {
                           return var1.contains('D');
                         }(widget.alarmDays),
                         onChanged: (newValue) async {
-                          setState(() => _model.domingoSwitchValue = newValue!);
+                          setState(() => _model.domingoSwitchValue = newValue);
                         },
                         title: Text(
                           'Domingo',
@@ -435,7 +432,7 @@ class _EditAlarmWidgetState extends State<EditAlarmWidget> {
                         dense: false,
                         controlAffinity: ListTileControlAffinity.trailing,
                       ),
-                    ].divide(SizedBox(height: 1.0)),
+                    ].divide(const SizedBox(height: 1.0)),
                   ),
                   FFButtonWidget(
                     onPressed: () async {
@@ -452,7 +449,7 @@ class _EditAlarmWidgetState extends State<EditAlarmWidget> {
                       });
                     },
                     text: 'Guardar',
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.done,
                       size: 18.0,
                     ),
@@ -460,9 +457,9 @@ class _EditAlarmWidgetState extends State<EditAlarmWidget> {
                       width: double.infinity,
                       height: 40.0,
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                          const EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
                       iconPadding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                          const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                       color: FlutterFlowTheme.of(context).primary,
                       textStyle:
                           FlutterFlowTheme.of(context).bodyMedium.override(
@@ -471,14 +468,14 @@ class _EditAlarmWidgetState extends State<EditAlarmWidget> {
                                 letterSpacing: 0.0,
                               ),
                       elevation: 3.0,
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: Colors.transparent,
                         width: 1.0,
                       ),
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
-                ].divide(SizedBox(height: 8.0)),
+                ].divide(const SizedBox(height: 8.0)),
               ),
             ),
           ),
