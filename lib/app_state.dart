@@ -158,7 +158,7 @@ class FFAppState extends ChangeNotifier {
     prefs.setStringList('ff_diasAlarmas', _diasAlarmas);
   }
 
-  List<int> _idAlarmas = [1, 2];
+  List<int> _idAlarmas = [0, 1];
   List<int> get idAlarmas => _idAlarmas;
   set idAlarmas(List<int> value) {
     _idAlarmas = value;

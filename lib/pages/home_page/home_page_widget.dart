@@ -100,7 +100,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   ParamType.String,
                 ),
                 'alarmId': serializeParam(
-                  FFAppState().idAlarmas.length + 1,
+                  FFAppState().idAlarmas.length,
                   ParamType.int,
                 ),
                 'isNew': serializeParam(
@@ -529,7 +529,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           ParamType.String,
                                         ),
                                         'alarmId': serializeParam(
-                                          nombreIndex + 1,
+                                          nombreIndex,
                                           ParamType.int,
                                         ),
                                       }.withoutNulls,
