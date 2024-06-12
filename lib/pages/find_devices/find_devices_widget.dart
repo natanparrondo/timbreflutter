@@ -47,8 +47,7 @@ class _FindDevicesWidgetState extends State<FindDevicesWidget> {
       FlutterBluePlus.scanResults.listen((results) {
         setState(() {
           devices = results;
-          //devices = results.where((result) => result.device.remoteId.toString() == "01:23:45:67:A9:8D").toList();
-        });
+          // devices = results.where((result) => result.device.remoteId.toString() == "01:23:45:67:A9:8D").toList();
         });
         print('Dispositivos encontrados:');
         for (var device in devices) {
