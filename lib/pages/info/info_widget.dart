@@ -1,7 +1,7 @@
+import 'package:flutter/material.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import 'package:flutter/material.dart';
 import 'info_model.dart';
 export 'info_model.dart';
 
@@ -26,7 +26,6 @@ class _InfoWidgetState extends State<InfoWidget> {
   @override
   void dispose() {
     _model.dispose();
-
     super.dispose();
   }
 
@@ -53,7 +52,7 @@ class _InfoWidgetState extends State<InfoWidget> {
               size: 30.0,
             ),
             onPressed: () async {
-              context.pop();
+              Navigator.of(context).pop();
             },
           ),
           title: Align(
@@ -77,39 +76,43 @@ class _InfoWidgetState extends State<InfoWidget> {
         ),
         body: SafeArea(
           top: true,
-          child: Align(
-            alignment: const AlignmentDirectional(0.0, 0.0),
+          child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
                     Icons.circle_notifications_rounded,
                     color: FlutterFlowTheme.of(context).primary,
-                    size: 128.0,
+                    size: 64.0,
                   ),
                   Text(
                     'Timbre',
-                    style: FlutterFlowTheme.of(context).displayMedium.override(
+                    style: FlutterFlowTheme.of(context).displaySmall.override(
                           fontFamily: 'Outfit',
                           letterSpacing: 0.0,
                         ),
                   ),
+                  // Text(
+                  //   'Version 0.2',
+                  //   style: FlutterFlowTheme.of(context).headlineSmall.override(
+                  //         fontFamily: 'Outfit',
+                  //         letterSpacing: 0.0,
+                  //       ),
+                  // ),
                   Text(
-                    'Version 0.1',
-                    style: FlutterFlowTheme.of(context).headlineSmall.override(
-                          fontFamily: 'Outfit',
-                          letterSpacing: 0.0,
-                        ),
-                  ),
-                  Text(
-                    'Proyecto timbre blabla',
+                    'Desarrollada para ITSB\nIntegrantes: Castro, Parrondo, Pylypchuk',
+                    textAlign: TextAlign.center, // Correct placement of textAlign
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
-                          fontFamily: 'Readex Pro',
-                          letterSpacing: 0.0,
-                        ),
+                      fontFamily: 'Readex Pro',
+                      letterSpacing: 0.0,
+                    ),
+                  ),
+                  SizedBox(height: 16.0), // Add some spacing before the ImageScroller
+                  AspectRatio(
+                    aspectRatio: 1.0, // To ensure the height and width are equal
+                    child: ImageScroller(),
                   ),
                 ],
               ),
@@ -117,6 +120,66 @@ class _InfoWidgetState extends State<InfoWidget> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class ImageScroller extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final double imageSize = MediaQuery.of(context).size.width - 32; // Adjust for padding
+
+    return PageView(
+      children: <Widget>[
+        Container(
+          width: imageSize,
+          height: imageSize,
+          child: Image.asset(
+            'assets/images/0.png',
+            fit: BoxFit.cover,
+          ),
+        ),
+        Container(
+          width: imageSize,
+          height: imageSize,
+          child: Image.asset(
+            'assets/images/1.png',
+            fit: BoxFit.cover,
+          ),
+        ),
+        Container(
+          width: imageSize,
+          height: imageSize,
+          child: Image.asset(
+            'assets/images/2.png',
+            fit: BoxFit.cover,
+          ),
+        ),
+        Container(
+          width: imageSize,
+          height: imageSize,
+          child: Image.asset(
+            'assets/images/3.png',
+            fit: BoxFit.cover,
+          ),
+        ),
+        Container(
+          width: imageSize,
+          height: imageSize,
+          child: Image.asset(
+            'assets/images/4.png',
+            fit: BoxFit.cover,
+          ),
+        ),
+        Container(
+          width: imageSize,
+          height: imageSize,
+          child: Image.asset(
+            'assets/images/5.png',
+            fit: BoxFit.cover,
+          ),
+        ),
+      ],
     );
   }
 }

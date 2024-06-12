@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
-
+import '/flutter_flow/flutter_flow_icon_button.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
 
 BluetoothDevice? connectedDevice;
 
@@ -45,7 +46,9 @@ class _FindDevicesWidgetState extends State<FindDevicesWidget> {
       });
       FlutterBluePlus.scanResults.listen((results) {
         setState(() {
-          devices = results.where((result) => result.device.remoteId.toString() == "01:23:45:67:A9:8D").toList();
+          devices = results;
+          //devices = results.where((result) => result.device.remoteId.toString() == "01:23:45:67:A9:8D").toList();
+        });
         });
         print('Dispositivos encontrados:');
         for (var device in devices) {
@@ -75,8 +78,42 @@ class _FindDevicesWidgetState extends State<FindDevicesWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
       appBar: AppBar(
-        title: Text('Find Devices'),
+        backgroundColor: FlutterFlowTheme.of(context).primary,
+        automaticallyImplyLeading: false,
+        leading: FlutterFlowIconButton(
+          borderColor: Colors.transparent,
+          borderRadius: 30.0,
+          borderWidth: 1.0,
+          buttonSize: 60.0,
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.white,
+            size: 30.0,
+          ),
+          onPressed: () async {
+            Navigator.of(context).pop();
+          },
+        ),
+        title: Align(
+          alignment: const AlignmentDirectional(0.0, 0.0),
+          child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 56.0, 0.0),
+            child: Text(
+              'Información',
+              style: FlutterFlowTheme.of(context).headlineMedium.override(
+                    fontFamily: 'Outfit',
+                    color: Colors.white,
+                    fontSize: 22.0,
+                    letterSpacing: 0.0,
+                  ),
+            ),
+          ),
+        ),
+        actions: const [],
+        centerTitle: true,
+        elevation: 2.0,
       ),
       body: Column(
         children: [
@@ -109,7 +146,6 @@ class _FindDevicesWidgetState extends State<FindDevicesWidget> {
     );
   }
 }
-
 
 void main() {
   runApp(MaterialApp(

@@ -111,7 +111,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             );
           },
           backgroundColor: FlutterFlowTheme.of(context).primary,
-          elevation: 8.0,
+          elevation: 6.0,
           child: Icon(
             Icons.add,
             color: FlutterFlowTheme.of(context).info,
@@ -342,21 +342,24 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   },
                                 ) ??
                                 false;
-                            HapticFeedback.heavyImpact();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Enviando señal reset',
-                                  style: TextStyle(
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
+                            if (confirmDialogResponse){
+                              HapticFeedback.heavyImpact();
+                              // if alert dialog 
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Enviando señal reset',
+                                    style: TextStyle(
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
+                                    ),
                                   ),
+                                  duration: const Duration(milliseconds: 4000),
+                                  backgroundColor:
+                                      FlutterFlowTheme.of(context).error,
                                 ),
-                                duration: const Duration(milliseconds: 4000),
-                                backgroundColor:
-                                    FlutterFlowTheme.of(context).error,
-                              ),
-                            );
+                              );
+                            }
                           },
                           text: 'Reset',
                           icon: const Icon(
