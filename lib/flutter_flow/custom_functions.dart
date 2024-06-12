@@ -17,12 +17,12 @@ String? generarString(
     String binaryString =
         days[i].split('').map((char) => char == '-' ? '0' : '1').join('');
     // Convert binary string to decimal
-    int decimalValue = int.parse(binaryString, radix: 2);
-    // Format the time as HH:MM
+    int decimalValue = (int.parse(binaryString, radix: 2));
+    String paddedDecimalValue = decimalValue.toString().padLeft(3, '0');    // Format the time as HH:MM
     String formattedTime =
         "${time[i].hour.toString().padLeft(2, '0')}:${time[i].minute.toString().padLeft(2, '0')}";
     // Create the formatted string
-    String formattedString = "n$formattedTime d$decimalValue;";
+    String formattedString = "n$formattedTime n$paddedDecimalValue;";
     String formattedStringNoSpaces = formattedString.replaceAll(' ', '');
 
     formattedStrings.add(formattedStringNoSpaces);
