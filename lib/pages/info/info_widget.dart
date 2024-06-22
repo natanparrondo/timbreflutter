@@ -49,7 +49,7 @@ class _InfoWidgetState extends State<InfoWidget> {
             icon: const Icon(
               Icons.arrow_back_ios_new,
               color: Colors.white,
-              size: 30.0,
+              size: 20.0,
             ),
             onPressed: () async {
               Navigator.of(context).pop();

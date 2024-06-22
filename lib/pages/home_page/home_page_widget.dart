@@ -8,9 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'home_page_model.dart';
 export 'home_page_model.dart';
-import '../find_devices/find_devices_widget.dart'; 
+import '../find_devices/find_devices_widget.dart';
+import '/globals.dart'; // Import the globals file
+
+BluetoothDevice? connectedDevice;
 
 class HomePageWidget extends StatefulWidget {
   const HomePageWidget({
@@ -20,7 +24,7 @@ class HomePageWidget extends StatefulWidget {
     String? btStatus,
     this.btMac,
   })  : time = time ?? '09:40',
-        btStatus = btStatus ?? 'No disponible / error',
+        btStatus = btStatus ?? 'Desconectado',
         super(key: key);
 
   final String? name;
@@ -42,11 +46,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => HomePageModel());
-
+    //_initBluetooth();
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       await requestPermission(bluetoothPermission);
-      updateStatus();  
+      updateStatus();
     });
   }
 
@@ -61,14 +65,13 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     // Actualiza el estado según el valor de la variable global connectedDevice
     setState(() {
       if (connectedDevice != null) {
-        btStatus = 'Conectado ${connectedDevice!.platformName}';
+        btStatus = 'Conectado ${connectedDevice!.remoteId}';
       } else {
-        btStatus = 'No disponible / error';
+        btStatus = 'Desconectado';
       }
     });
     print('btStatus: $btStatus');
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -189,7 +192,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             ),
                       ),
                       Text(
-                        widget.btStatus,
+                        context.watch<FFAppState>().btStatus,
                         style: FlutterFlowTheme.of(context).bodyLarge.override(
                               fontFamily: 'Readex Pro',
                               color: FlutterFlowTheme.of(context).primaryText,
@@ -548,13 +551,16 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   thickness: 1.0,
                   color: FlutterFlowTheme.of(context).accent4,
                 ),
-                Text(
-                  'String to be sent:',
-                  style: FlutterFlowTheme.of(context).bodyMedium.override(
-                        fontFamily: 'Readex Pro',
-                        letterSpacing: 0.0,
-                      ),
-                ),
+                // Text(
+                //   'String to be sent:',
+                //   style: FlutterFlowTheme.of(context).bodyMedium.override(
+                //         fontFamily: 'Readex Pro',
+                //         letterSpacing: 0.0,
+                //       ),
+                // ),
+                //Text(
+                //  '${device.remoteId}',
+                //),
                 SelectionArea(
                     child: Text(
                   valueOrDefault<String>(
@@ -562,7 +568,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         FFAppState().nombresAlarmas.length,
                         FFAppState().horasAlarmas.toList(),
                         FFAppState().diasAlarmas.toList()),
-                    'default',
+                    'No hay Alarmas',
                   ).maybeHandleOverflow(maxChars: 62),
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily: 'Readex Pro',

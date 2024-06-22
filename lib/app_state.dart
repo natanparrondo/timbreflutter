@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart'; 
+import 'package:flutter/foundation.dart';
+
 
 class FFAppState extends ChangeNotifier {
   static FFAppState _instance = FFAppState._internal();
@@ -197,6 +200,20 @@ class FFAppState extends ChangeNotifier {
     _idAlarmas.insert(index, value);
     prefs.setStringList(
         'ff_idAlarmas', _idAlarmas.map((x) => x.toString()).toList());
+  }
+
+  BluetoothDevice? connectedDevice;
+  String _btStatus = 'AAA';
+  String get btStatus => _btStatus;
+
+  void updateBluetoothStatus(BluetoothDevice? device) {
+    connectedDevice = device;
+    if (connectedDevice != null) {
+      _btStatus = 'Conectado ${connectedDevice!.remoteId}';
+    } else {
+      _btStatus = 'Desconectado';
+    }
+    notifyListeners(); // Notify listeners of changes
   }
 }
 

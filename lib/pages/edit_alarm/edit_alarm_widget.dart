@@ -86,6 +86,9 @@ class _EditAlarmWidgetState extends State<EditAlarmWidget> {
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
+                  Container(
+                    height:12, 
+                  ),
                   TextFormField(
                     controller: _model.textController,
                     focusNode: _model.textFieldFocusNode,
@@ -162,6 +165,9 @@ class _EditAlarmWidgetState extends State<EditAlarmWidget> {
                         null,
                     validator:
                         _model.textControllerValidator.asValidator(context),
+                  ),
+                  Container(
+                    height:12, 
                   ),
                   Align(
                     alignment: const AlignmentDirectional(-1.0, 0.0),
@@ -244,22 +250,25 @@ class _EditAlarmWidgetState extends State<EditAlarmWidget> {
                       ),
                     ),
                   ),
-                  Text(
-                    'alarmId ',
-                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                          fontFamily: 'Readex Pro',
-                          letterSpacing: 0.0,
-                        ),
-                  ),
-                  Text(
-                    valueOrDefault<String>(
-                      widget.alarmId?.toString(),
-                      '-',
-                    ),
-                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                          fontFamily: 'Readex Pro',
-                          letterSpacing: 0.0,
-                        ),
+                  // Text(
+                  //   'alarmId ',
+                  //   style: FlutterFlowTheme.of(context).bodyMedium.override(
+                  //         fontFamily: 'Readex Pro',
+                  //         letterSpacing: 0.0,
+                  //       ),
+                  // ),
+                  // Text(
+                  //   valueOrDefault<String>(
+                  //     widget.alarmId?.toString(),
+                  //     '-',
+                  //   ),
+                  //   style: FlutterFlowTheme.of(context).bodyMedium.override(
+                  //         fontFamily: 'Readex Pro',
+                  //         letterSpacing: 0.0,
+                  //       ),
+                  // ),
+                  Container(
+                    height: 12,
                   ),
                   Column(
                     mainAxisSize: MainAxisSize.max,
@@ -433,6 +442,9 @@ class _EditAlarmWidgetState extends State<EditAlarmWidget> {
                         controlAffinity: ListTileControlAffinity.trailing,
                       ),
                     ],
+                  ),
+                  Container(
+                    height: 12,
                   ),
                   FFButtonWidget(
                     onPressed: () async {

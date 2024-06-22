@@ -3,8 +3,8 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
-
-BluetoothDevice? connectedDevice;
+import '/globals.dart'; // Import the globals file
+import 'dart:convert';
 
 class FindDevicesWidget extends StatefulWidget {
   const FindDevicesWidget({Key? key}) : super(key: key);
@@ -17,6 +17,10 @@ class _FindDevicesWidgetState extends State<FindDevicesWidget> {
   final FlutterBluePlus flutterBlue = FlutterBluePlus();
   List<ScanResult> devices = [];
   BluetoothDevice? connectedDevice;
+  BluetoothCharacteristic? characteristic;
+
+  static const String serviceUUID = "0000ffe0-0000-1000-8000-00805f9b34fb";
+  static const String characteristicUUID = "0000ffe1-0000-1000-8000-00805f9b34fb";
 
   @override
   void initState() {
@@ -32,10 +36,9 @@ class _FindDevicesWidgetState extends State<FindDevicesWidget> {
     if (locationStatus.isGranted &&
         bluetoothScanStatus.isGranted &&
         bluetoothConnectStatus.isGranted) {
-      print('Todos los permisos concedidos');
+      print('All permissions granted');
     } else {
-      print('Permisos denegados');
-      openAppSettings();
+      print('Permissions denied');
     }
   }
 
@@ -47,9 +50,8 @@ class _FindDevicesWidgetState extends State<FindDevicesWidget> {
       FlutterBluePlus.scanResults.listen((results) {
         setState(() {
           devices = results;
-          // devices = results.where((result) => result.device.remoteId.toString() == "01:23:45:67:A9:8D").toList();
         });
-        print('Dispositivos encontrados:');
+        print('Devices found:');
         for (var device in devices) {
           print('${device.device.name} (${device.device.remoteId})');
         }
@@ -61,17 +63,39 @@ class _FindDevicesWidgetState extends State<FindDevicesWidget> {
     }
   }
 
-  Future<void> connectToDevice(BluetoothDevice device) async {
-    try {
-      await device.connect();
-      setState(() {
-        connectedDevice = device;
-      });
+Future<void> connectToDevice(BluetoothDevice device) async {
+  try {
+    await device.connect();
+    setState(() {
       connectedDevice = device;
-      print('Conectado a ${device.platformName}');
-    } catch (e) {
-      print('Error al conectar: $e');
-    }
+    });
+    print('Connected to ${device.remoteId}');
+
+    // Discover services and characteristics
+    List<BluetoothService> services = await device.discoverServices();
+    services.forEach((service) {
+      if (service.uuid.toString() == serviceUUID) {
+        service.characteristics.forEach((characteristic) {
+          if (characteristic.uuid.toString() == characteristicUUID) {
+            this.characteristic = characteristic;
+          }
+        });
+      }
+    });
+  } catch (e) {
+    print('Error connecting: $e');
+  }
+}
+
+
+  void sendDataToBluetooth() async {
+      try {
+        List<int> data = utf8.encode("r");
+        await characteristic!.write(data);
+        print("Data sent successfully!");
+      } catch (error) {
+        print("Error sending data: $error");
+      }
   }
 
   @override
@@ -89,7 +113,7 @@ class _FindDevicesWidgetState extends State<FindDevicesWidget> {
           icon: const Icon(
             Icons.arrow_back_ios_new,
             color: Colors.white,
-            size: 30.0,
+            size: 20.0,
           ),
           onPressed: () async {
             Navigator.of(context).pop();
@@ -100,7 +124,7 @@ class _FindDevicesWidgetState extends State<FindDevicesWidget> {
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 56.0, 0.0),
             child: Text(
-              'Información',
+              'Vincular modulo',
               style: FlutterFlowTheme.of(context).headlineMedium.override(
                     fontFamily: 'Outfit',
                     color: Colors.white,
@@ -116,9 +140,43 @@ class _FindDevicesWidgetState extends State<FindDevicesWidget> {
       ),
       body: Column(
         children: [
-          ElevatedButton(
+          Container(
+            height: 24,
+          ),
+          ElevatedButton.icon(
             onPressed: startScanning,
-            child: Text('Start Scanning'),
+            icon: const Icon(
+              Icons.search,
+              size: 15.0,
+            ),
+            label: const Text('Scan Devices'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: FlutterFlowTheme.of(context).primary,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 16.0),
+              textStyle: FlutterFlowTheme.of(context).labelMedium.override(
+                fontFamily: 'Readex Pro',
+                color: Colors.white,
+                letterSpacing: 0.0,
+              ),
+              elevation: 3.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+            ),
+          ),
+          Container(
+            height: 12,
+          ),
+          Text(
+            'Nearby compatible BLE devices are shown',
+            style: FlutterFlowTheme.of(context).labelMedium.override(
+              fontFamily: 'Outfit',
+              letterSpacing: 0.0,
+            ),
+          ),
+          Container(
+            height: 24,
           ),
           Expanded(
             child: ListView.builder(
@@ -129,10 +187,10 @@ class _FindDevicesWidgetState extends State<FindDevicesWidget> {
                 return ListTile(
                   title: Text(device.device.platformName.isNotEmpty
                       ? device.device.platformName
-                      : 'Unnamed Device'),
+                      : 'Unknown Device'),
                   subtitle: Text(
                     isConnected
-                        ? '${device.device.remoteId} (Conectado)'
+                        ? '${device.device.remoteId} (Connected)'
                         : device.device.remoteId.toString(),
                   ),
                   onTap: () => connectToDevice(device.device),
@@ -141,6 +199,10 @@ class _FindDevicesWidgetState extends State<FindDevicesWidget> {
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => sendDataToBluetooth(),
+        child: const Icon(Icons.send),
       ),
     );
   }
