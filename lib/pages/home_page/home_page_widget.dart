@@ -303,7 +303,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       HapticFeedback.lightImpact();
     }
   },
-  text: 'Change Time',
+  text: 'Set time',
   icon: const Icon(
     Icons.schedule,
     size: 15.0,

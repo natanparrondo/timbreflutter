@@ -203,7 +203,7 @@ class FFAppState extends ChangeNotifier {
   }
 
   BluetoothDevice? connectedDevice;
-  String _btStatus = 'AAA';
+  String _btStatus = 'Desconectado';
   String get btStatus => _btStatus;
 
   void updateBluetoothStatus(BluetoothDevice? device) {

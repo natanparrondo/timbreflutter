@@ -226,10 +226,6 @@ class _FindDevicesWidgetState extends State<FindDevicesWidget> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => sendDataToBluetooth(),
-        child: const Icon(Icons.send),
-      ),
     );
   }
 }
