@@ -22,7 +22,7 @@ String? generarString(
     String formattedTime =
         "${time[i].hour.toString().padLeft(2, '0')}:${time[i].minute.toString().padLeft(2, '0')}";
     // Create the formatted string
-    String formattedString = "n$formattedTime n$paddedDecimalValue;";
+    String formattedString = "n$formattedTime d$paddedDecimalValue;";
     String formattedStringNoSpaces = formattedString.replaceAll(' ', '');
 
     formattedStrings.add(formattedStringNoSpaces);

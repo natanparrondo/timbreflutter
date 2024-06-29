@@ -132,7 +132,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           backgroundColor: FlutterFlowTheme.of(context).primary,
           elevation: 6.0,
           child: Icon(
-            Icons.add,
+            Icons.more_time,
             color: FlutterFlowTheme.of(context).info,
             size: 24.0,
           ),
@@ -243,50 +243,92 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     children: [
                       Expanded(
                         child: FFButtonWidget(
-                          onPressed: () async {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Ring Enviado',
-                                  style: TextStyle(
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                  ),
-                                ),
-                                duration: const Duration(milliseconds: 4000),
-                                backgroundColor:
-                                    FlutterFlowTheme.of(context).secondary,
-                              ),
-                            );
-                            HapticFeedback.lightImpact();
-                          },
-                          text: 'Ring',
-                          icon: const Icon(
-                            Icons.notifications_active_sharp,
-                            size: 15.0,
-                          ),
-                          options: FFButtonOptions(
-                            height: 40.0,
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                24.0, 0.0, 24.0, 0.0),
-                            iconPadding: const EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            color: FlutterFlowTheme.of(context).primary,
-                            textStyle: FlutterFlowTheme.of(context)
-                                .labelMedium
-                                .override(
-                                  fontFamily: 'Readex Pro',
-                                  color: Colors.white,
-                                  letterSpacing: 0.0,
-                                ),
-                            elevation: 3.0,
-                            borderSide: const BorderSide(
-                              color: Colors.transparent,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
+  onPressed: () async {
+    final datePickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(
+          (DateTime.now())),
+      builder: (context, child) {
+        return wrapInMaterialTimePickerTheme(
+          context,
+          child!,
+          headerBackgroundColor:
+              FlutterFlowTheme.of(context).primary,
+          headerForegroundColor:
+              FlutterFlowTheme.of(context).info,
+          headerTextStyle: FlutterFlowTheme.of(context)
+              .headlineLarge
+              .override(
+                fontFamily: 'Outfit',
+                fontSize: 32.0,
+                letterSpacing: 0.0,
+                fontWeight: FontWeight.w600,
+              ),
+          pickerBackgroundColor:
+              FlutterFlowTheme.of(context).secondaryBackground,
+          pickerForegroundColor:
+              FlutterFlowTheme.of(context).primaryText,
+          selectedDateTimeBackgroundColor:
+              FlutterFlowTheme.of(context).primary,
+          selectedDateTimeForegroundColor:
+              FlutterFlowTheme.of(context).info,
+          actionButtonForegroundColor:
+              FlutterFlowTheme.of(context).primaryText,
+          iconSize: 24.0,
+        );
+      },
+    );
+
+    if (datePickedTime != null) {
+      final tiempo = '${datePickedTime.hour.toString().padLeft(2, '0')}:${datePickedTime.minute.toString().padLeft(2, '0')}';
+
+      setState(() {
+        // Your state updates, if any
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Enviado update tiempo $tiempo',
+            style: TextStyle(
+              color: FlutterFlowTheme.of(context).primaryText,
+            ),
+          ),
+          duration: const Duration(milliseconds: 4000),
+          backgroundColor: FlutterFlowTheme.of(context).secondary,
+        ),
+      );
+      sendDataToBluetooth('c$tiempo');
+
+      HapticFeedback.lightImpact();
+    }
+  },
+  text: 'Change Time',
+  icon: const Icon(
+    Icons.schedule,
+    size: 15.0,
+  ),
+  options: FFButtonOptions(
+    height: 40.0,
+    padding: const EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+    iconPadding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+    color: FlutterFlowTheme.of(context).primary,
+    textStyle: FlutterFlowTheme.of(context)
+        .labelMedium
+        .override(
+          fontFamily: 'Readex Pro',
+          color: Colors.white,
+          letterSpacing: 0.0,
+        ),
+    elevation: 3.0,
+    borderSide: const BorderSide(
+      color: Colors.transparent,
+      width: 1.0,
+    ),
+    borderRadius: BorderRadius.circular(8.0),
+  ),
+),
+
                       ),
                       Expanded(
                         child: FFButtonWidget(
@@ -299,7 +341,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   FFAppState().diasAlarmas.toList()),
                               'No hay Alarmas',
                               )
-                            ); //ARREGLAR PORFAVOR NATAN ARREGLAR 
+                            ); //ARREGLAR PORFAVOR NATAN ARREGLAR - ARREGLADO
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
@@ -375,6 +417,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             if (confirmDialogResponse){
                               HapticFeedback.heavyImpact();
                               // if alert dialog 
+                              sendDataToBluetooth("RESET;");
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
