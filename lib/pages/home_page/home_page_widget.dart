@@ -291,7 +291,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       Expanded(
                         child: FFButtonWidget(
                           onPressed: () async {
-                            sendDataToBluetooth("PORNO"); //ARREGLAR PORFAVOR NATAN ARREGLAR 
+                            sendDataToBluetooth(
+                              valueOrDefault<String>(
+                              functions.generarString(
+                                  FFAppState().nombresAlarmas.length,
+                                  FFAppState().horasAlarmas.toList(),
+                                  FFAppState().diasAlarmas.toList()),
+                              'No hay Alarmas',
+                              )
+                            ); //ARREGLAR PORFAVOR NATAN ARREGLAR 
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
