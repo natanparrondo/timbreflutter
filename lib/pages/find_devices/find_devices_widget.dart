@@ -6,6 +6,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/globals.dart'; // Import the globals file
 import 'dart:convert';
 
+
 class FindDevicesWidget extends StatefulWidget {
   const FindDevicesWidget({Key? key}) : super(key: key);
 
@@ -18,9 +19,9 @@ class _FindDevicesWidgetState extends State<FindDevicesWidget> {
   List<ScanResult> devices = [];
   BluetoothDevice? connectedDevice;
   BluetoothCharacteristic? characteristic;
+  bool foundWritableCharacteristic = false; // Variable para verificar la característica de escritura
 
-  static const String serviceUUID = "0000ffe0-0000-1000-8000-00805f9b34fb";
-  static const String characteristicUUID = "0000ffe1-0000-1000-8000-00805f9b34fb";
+  static const String characteristicUUID = "cd1f";
 
   @override
   void initState() {
@@ -63,40 +64,65 @@ class _FindDevicesWidgetState extends State<FindDevicesWidget> {
     }
   }
 
-Future<void> connectToDevice(BluetoothDevice device) async {
-  try {
-    await device.connect();
-    setState(() {
-      connectedDevice = device;
-    });
-    print('Connected to ${device.remoteId}');
+ Future<void> connectToDevice(BluetoothDevice device) async {
+    try {
+      await device.connect();
+      setState(() {
+        AppGlobals.connectedDevice = device;
+      });
+      if (device.platformName.isNotEmpty) {
+        print('Conectado a ${device.platformName}');
+      } else {
+        print('Conectado a ${device.remoteId}');
+      }
 
-    // Discover services and characteristics
-    List<BluetoothService> services = await device.discoverServices();
-    services.forEach((service) {
-      if (service.uuid.toString() == serviceUUID) {
+      // Discover services and characteristics
+      List<BluetoothService> services = await device.discoverServices();
+      services.forEach((service) {
+        print('Service found: ${service.uuid}');
         service.characteristics.forEach((characteristic) {
-          if (characteristic.uuid.toString() == characteristicUUID) {
-            this.characteristic = characteristic;
+          print('Characteristic found: ${characteristic.uuid}');
+          if (characteristic.uuid.toString().toUpperCase() == characteristicUUID.toUpperCase()) {
+            print('Característica de escritura encontrada y asignada: ${characteristic.uuid}');
+            AppGlobals.characteristic = characteristic;
+            foundWritableCharacteristic = true;
           }
         });
+      });
+
+      if (!foundWritableCharacteristic) {
+        print('No se encontró la característica de escritura con UUID: $characteristicUUID');
       }
-    });
-  } catch (e) {
-    print('Error connecting: $e');
+
+    } catch (e) {
+      print('Error connecting: $e');
+    }
+  }
+
+
+  void sendDataToBluetooth() async {
+  if (AppGlobals.characteristic == null) {
+    print('No hay ninguna característica de escritura disponible.');
+    return; // Manejar el caso donde no se ha encontrado la característica de escritura
+  }
+
+  try {
+    List<int> data = utf8.encode("BORRAR;");
+    await AppGlobals.characteristic!.write(data);
+    print('Datos enviados correctamente: c');
+  } catch (error) {
+    print('Error enviando datos: $error');
   }
 }
 
 
-  void sendDataToBluetooth() async {
-      try {
-        List<int> data = utf8.encode("r");
-        await characteristic!.write(data);
-        print("Data sent successfully!");
-      } catch (error) {
-        print("Error sending data: $error");
-      }
+  void printConnectedDevice() {
+  if (connectedDevice != null) {
+    print('connectedDevice: ${connectedDevice!.platformName}');
+  } else {
+    print('No device connected');
   }
+}
 
   @override
   Widget build(BuildContext context) {

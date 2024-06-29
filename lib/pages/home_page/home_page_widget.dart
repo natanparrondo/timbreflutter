@@ -13,8 +13,7 @@ import 'home_page_model.dart';
 export 'home_page_model.dart';
 import '../find_devices/find_devices_widget.dart';
 import '/globals.dart'; // Import the globals file
-
-BluetoothDevice? connectedDevice;
+import 'dart:convert';
 
 class HomePageWidget extends StatefulWidget {
   const HomePageWidget({
@@ -55,23 +54,40 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    updateStatus();
+  }
+
+  @override
   void dispose() {
     _model.dispose();
     super.dispose();
   }
 
   void updateStatus() {
-    print('connectedDevice: $connectedDevice');
+    print('connectedDevice: $AppGlobals.connectedDevice');
     // Actualiza el estado según el valor de la variable global connectedDevice
     setState(() {
-      if (connectedDevice != null) {
-        btStatus = 'Conectado ${connectedDevice!.remoteId}';
+      if (AppGlobals.connectedDevice != null) {
+        btStatus = 'Conectado ${AppGlobals.connectedDevice!.remoteId}';
       } else {
         btStatus = 'Desconectado';
       }
     });
     print('btStatus: $btStatus');
   }
+
+  void sendDataToBluetooth(String message) async {
+
+  try {
+    List<int> data = utf8.encode(message);
+    await AppGlobals.characteristic!.write(data);
+    print("Data sent successfully!");
+  } catch (error) {
+    print("Error sending data: $error");
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -275,6 +291,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       Expanded(
                         child: FFButtonWidget(
                           onPressed: () async {
+                            sendDataToBluetooth("PORNO"); //ARREGLAR PORFAVOR NATAN ARREGLAR 
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
@@ -336,8 +353,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           child: const Text('Cancelar'),
                                         ),
                                         TextButton(
-                                          onPressed: () => Navigator.pop(
-                                              alertDialogContext, true),
+                                          onPressed: () {
+                                          sendDataToBluetooth("BORRAR;");
+                                          Navigator.pop(alertDialogContext);
+                                          },
                                           child: const Text('Confirmar'),
                                         ),
                                       ],
