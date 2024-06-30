@@ -102,7 +102,7 @@ class _InfoWidgetState extends State<InfoWidget> {
                   //       ),
                   // ),
                   Text(
-                    'Desarrollada para ITSB\nIntegrantes: Castro, Parrondo, Pylypchuk',
+                    'Desarrollada para el proyecto del primer cuatrimestre\n6to D - ITSB\nIntegrantes: Castro, Parrondo, Pylypchuk',
                     textAlign: TextAlign.center, // Correct placement of textAlign
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                       fontFamily: 'Readex Pro',
@@ -176,6 +176,22 @@ class ImageScroller extends StatelessWidget {
           height: imageSize,
           child: Image.asset(
             'assets/images/5.png',
+            fit: BoxFit.cover,
+          ),
+        ),
+        Container(
+          width: imageSize,
+          height: imageSize,
+          child: Image.asset(
+            'assets/images/6.png',
+            fit: BoxFit.cover,
+          ),
+        ),
+        Container(
+          width: imageSize,
+          height: imageSize,
+          child: Image.asset(
+            'assets/images/7.png',
             fit: BoxFit.cover,
           ),
         ),
