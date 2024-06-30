@@ -175,7 +175,7 @@ class _FindDevicesWidgetState extends State<FindDevicesWidget> {
               Icons.search,
               size: 15.0,
             ),
-            label: const Text('Scan Devices'),
+            label: const Text('Escanear dispositivos'),
             style: ElevatedButton.styleFrom(
               backgroundColor: FlutterFlowTheme.of(context).primary,
               foregroundColor: Colors.white,
@@ -195,7 +195,7 @@ class _FindDevicesWidgetState extends State<FindDevicesWidget> {
             height: 12,
           ),
           Text(
-            'Nearby compatible BLE devices are shown',
+            'Se muestran los dispositivos compatibles con BLE cercanos',
             style: FlutterFlowTheme.of(context).labelMedium.override(
               fontFamily: 'Outfit',
               letterSpacing: 0.0,
@@ -213,10 +213,10 @@ class _FindDevicesWidgetState extends State<FindDevicesWidget> {
                 return ListTile(
                   title: Text(device.device.platformName.isNotEmpty
                       ? device.device.platformName
-                      : 'Unknown Device'),
+                      : 'Dispositivo desconocido'),
                   subtitle: Text(
                     isConnected
-                        ? '${device.device.remoteId} (Connected)'
+                        ? '${device.device.remoteId} (Conectado)'
                         : device.device.remoteId.toString(),
                   ),
                   onTap: () => connectToDevice(device.device),

@@ -358,7 +358,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             );
                             HapticFeedback.lightImpact();
                           },
-                          text: 'Send',
+                          text: 'Enviar',
                           icon: const Icon(
                             Icons.send_rounded,
                             size: 15.0,
@@ -395,19 +395,22 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     return AlertDialog(
                                       title: const Text('Reset'),
                                       content: const Text(
-                                          'Resetear dispositivo vinculado?'),
+                                          '¿Resetear memoria de alarmas en dispositivo vinculado?'),
                                       actions: [
                                         TextButton(
                                           onPressed: () => Navigator.pop(
                                               alertDialogContext, false),
-                                          child: const Text('Cancelar'),
+                                          child: const Text('CANCELAR'),
                                         ),
                                         TextButton(
                                           onPressed: () {
                                           sendDataToBluetooth("BORRAR;");
                                           Navigator.pop(alertDialogContext);
                                           },
-                                          child: const Text('Confirmar'),
+                                          style: TextButton.styleFrom(
+                                            foregroundColor: Colors.red, // Set the text color to red
+                                          ),
+                                          child: const Text('COMFIRMAR'),
                                         ),
                                       ],
                                     );
