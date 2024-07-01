@@ -336,7 +336,7 @@ onPressed: () async {
       String formattedDate = '${datePicked.day.toString().padLeft(2, '0')}${datePicked.month.toString().padLeft(2, '0')}${datePicked.year.toString().substring(2)}';
       String formattedTime = '${timePicked.hour.toString().padLeft(2, '0')}${timePicked.minute.toString().padLeft(2, '0')}';
       String formattedDateTime = '$formattedDate$formattedTime';
-      sendDataToBluetoothTime("c$formattedDateTime");
+      sendDataToBluetooth("c$formattedDateTime  ");
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -355,7 +355,7 @@ onPressed: () async {
     }
   }
 },
-  text: 'Set time',
+  text: 'Tiempo',
   icon: const Icon(
     Icons.schedule,
     size: 15.0,
