@@ -14,6 +14,7 @@ export 'home_page_model.dart';
 import '../find_devices/find_devices_widget.dart';
 import '/globals.dart'; // Import the globals file
 import 'dart:convert';
+import 'dart:async';
 
 class HomePageWidget extends StatefulWidget {
   const HomePageWidget({
@@ -25,7 +26,6 @@ class HomePageWidget extends StatefulWidget {
   })  : time = time ?? '09:40',
         btStatus = btStatus ?? 'Desconectado',
         super(key: key);
-
   final String? name;
   final String time;
   final String btStatus;
@@ -37,7 +37,7 @@ class HomePageWidget extends StatefulWidget {
 
 class _HomePageWidgetState extends State<HomePageWidget> {
   late HomePageModel _model;
-
+  Timer? _timer;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   String btStatus = 'No disponible / error';
 
@@ -51,6 +51,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       await requestPermission(bluetoothPermission);
       updateStatus();
     });
+    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      updateStatus();
+    });
   }
 
   @override
@@ -62,6 +65,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   @override
   void dispose() {
     _model.dispose();
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -70,7 +74,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     // Actualiza el estado según el valor de la variable global connectedDevice
     setState(() {
       if (AppGlobals.connectedDevice != null) {
-        btStatus = 'Conectado ${AppGlobals.connectedDevice!.remoteId}';
+        btStatus = 'Conectado a "${AppGlobals.connectedDevice!.platformName}"';
       } else {
         btStatus = 'Desconectado';
       }
@@ -78,11 +82,46 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     print('btStatus: $btStatus');
   }
 
-  void sendDataToBluetooth(String message) async {
+void sendDataToBluetoothTime(String message) async {
 
   try {
     List<int> data = utf8.encode(message);
     await AppGlobals.characteristic!.write(data);
+    print("Data sent successfully!");
+  } catch (error) {
+    print("Error sending data: $error");
+  }
+}
+
+void sendDataToBluetooth(String message) async {
+  try {
+    List<String> chunks = [];
+    int chunkSize = 11;
+
+    // Split the message into chunks of 11 characters
+    for (int i = 0; i < message.length; i += chunkSize) {
+      chunks.add(message.substring(i, i + chunkSize > message.length ? message.length : i + chunkSize));
+    }
+
+    // Function to send each chunk
+    Future<void> sendChunk(int index) async {
+      if (index < chunks.length) {
+        try {
+          List<int> data = utf8.encode(chunks[index]);
+          await AppGlobals.characteristic!.write(data);
+          print("Chunk ${index + 1}/${chunks.length} sent successfully: ${chunks[index]}");
+        } catch (error) {
+          print("Error sending chunk $index: $error");
+        }
+      }
+    }
+
+    // Send chunks sequentially with a delay between each
+    for (int i = 0; i < chunks.length; i++) {
+      await sendChunk(i);
+      await Future.delayed(Duration(milliseconds: 200)); // Adjust delay as needed
+    }
+
     print("Data sent successfully!");
   } catch (error) {
     print("Error sending data: $error");
@@ -208,8 +247,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             ),
                       ),
                       Text(
-                        context.watch<FFAppState>().btStatus,
-                        style: FlutterFlowTheme.of(context).bodyLarge.override(
+                        btStatus,
+                        style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'Readex Pro',
                               color: FlutterFlowTheme.of(context).primaryText,
                               letterSpacing: 0.0,
@@ -243,19 +282,38 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     children: [
                       Expanded(
                         child: FFButtonWidget(
-  onPressed: () async {
-    final datePickedTime = await showTimePicker(
+onPressed: () async {
+  final currentDate = DateTime.now();
+  
+  // Mostrar DatePicker
+  final datePicked = await showDatePicker(
+    context: context,
+    initialDate: currentDate,
+    firstDate: DateTime(2000),
+    lastDate: DateTime(2100),
+    builder: (context, child) {
+      return Theme(
+        data: ThemeData.light().copyWith(
+          primaryColor: FlutterFlowTheme.of(context).primary,
+          colorScheme: ColorScheme.light(primary: FlutterFlowTheme.of(context).primary),
+          buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
+        ),
+        child: child!,
+      );
+    },
+  );
+
+  if (datePicked != null) {
+    // Mostrar TimePicker
+    final timePicked = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.fromDateTime(
-          (DateTime.now())),
+      initialTime: TimeOfDay.fromDateTime(currentDate),
       builder: (context, child) {
         return wrapInMaterialTimePickerTheme(
           context,
           child!,
-          headerBackgroundColor:
-              FlutterFlowTheme.of(context).primary,
-          headerForegroundColor:
-              FlutterFlowTheme.of(context).info,
+          headerBackgroundColor: FlutterFlowTheme.of(context).primary,
+          headerForegroundColor: FlutterFlowTheme.of(context).info,
           headerTextStyle: FlutterFlowTheme.of(context)
               .headlineLarge
               .override(
@@ -264,32 +322,26 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 letterSpacing: 0.0,
                 fontWeight: FontWeight.w600,
               ),
-          pickerBackgroundColor:
-              FlutterFlowTheme.of(context).secondaryBackground,
-          pickerForegroundColor:
-              FlutterFlowTheme.of(context).primaryText,
-          selectedDateTimeBackgroundColor:
-              FlutterFlowTheme.of(context).primary,
-          selectedDateTimeForegroundColor:
-              FlutterFlowTheme.of(context).info,
-          actionButtonForegroundColor:
-              FlutterFlowTheme.of(context).primaryText,
+          pickerBackgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+          pickerForegroundColor: FlutterFlowTheme.of(context).primaryText,
+          selectedDateTimeBackgroundColor: FlutterFlowTheme.of(context).primary,
+          selectedDateTimeForegroundColor: FlutterFlowTheme.of(context).info,
+          actionButtonForegroundColor: FlutterFlowTheme.of(context).primaryText,
           iconSize: 24.0,
         );
       },
     );
 
-    if (datePickedTime != null) {
-      final tiempo = '${datePickedTime.hour.toString().padLeft(2, '0')}:${datePickedTime.minute.toString().padLeft(2, '0')}';
-
-      setState(() {
-        // Your state updates, if any
-      });
+    if (timePicked != null) {
+      String formattedDate = '${datePicked.day.toString().padLeft(2, '0')}${datePicked.month.toString().padLeft(2, '0')}${datePicked.year.toString().substring(2)}';
+      String formattedTime = '${timePicked.hour.toString().padLeft(2, '0')}${timePicked.minute.toString().padLeft(2, '0')}';
+      String formattedDateTime = '$formattedDate$formattedTime';
+      sendDataToBluetoothTime("c$formattedDateTime");
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Enviado update tiempo $tiempo',
+            'Enviado update tiempo $formattedDateTime',
             style: TextStyle(
               color: FlutterFlowTheme.of(context).primaryText,
             ),
@@ -298,11 +350,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           backgroundColor: FlutterFlowTheme.of(context).secondary,
         ),
       );
-      sendDataToBluetooth('c$tiempo');
-
+      print(formattedDateTime);
       HapticFeedback.lightImpact();
     }
-  },
+  }
+},
   text: 'Set time',
   icon: const Icon(
     Icons.schedule,

@@ -219,7 +219,36 @@ class _FindDevicesWidgetState extends State<FindDevicesWidget> {
                         ? '${device.device.remoteId} (Conectado)'
                         : device.device.remoteId.toString(),
                   ),
-                  onTap: () => connectToDevice(device.device),
+                  onTap: () {
+                    connectToDevice(device.device);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Conectando a ${device.device.platformName}...',
+                          style: TextStyle(
+                            color: FlutterFlowTheme.of(context).primaryText,
+                          ),
+                        ),
+                        duration: const Duration(milliseconds: 3000),
+                        backgroundColor: FlutterFlowTheme.of(context).warning,
+                      ),
+                    );
+                    Future.delayed(Duration(milliseconds: 3000), () {
+                      Navigator.pop(context);
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Conectado a ${device.device.platformName}',
+                          style: TextStyle(
+                            color: FlutterFlowTheme.of(context).primaryText,
+                          ),
+                        ),
+                        duration: const Duration(milliseconds: 4000),
+                        backgroundColor: FlutterFlowTheme.of(context).secondary,
+                      ),
+                    );
+                  },
                 );
               },
             ),
